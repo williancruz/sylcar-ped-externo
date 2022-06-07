@@ -1,0 +1,33 @@
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "ped_externos" (
+	"id"	INTEGER NOT NULL,
+	"nro"	INTEGER NOT NULL,
+	"serie"	TEXT NOT NULL,
+	"vend"	INTEGER NOT NULL,
+	"data"	TEXT NOT NULL,
+	"obs"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("vend") REFERENCES "vendedores"("codigo") ON DELETE cascade ON UPDATE cascade
+);
+CREATE TABLE IF NOT EXISTS "ped_internos" (
+	"nro"	INTEGER NOT NULL UNIQUE,
+	"faturista"	TEXT NOT NULL,
+	"status"	TEXT NOT NULL DEFAULT A,
+	"fk_num_pedido_externo"	INTEGER NOT NULL,
+	FOREIGN KEY("fk_num_pedido_externo") REFERENCES "ped_externos"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+	PRIMARY KEY("nro")
+);
+CREATE TABLE IF NOT EXISTS "usuarios" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"nome"	TEXT NOT NULL UNIQUE,
+	"senha"	TEXT NOT NULL,
+	"ativo"	TEXT NOT NULL DEFAULT 'S',
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "vendedores" (
+	"codigo"	INTEGER NOT NULL UNIQUE,
+	"nome"	TEXT NOT NULL UNIQUE,
+	"serie_ped"	TEXT NOT NULL,
+	PRIMARY KEY("codigo")
+);
+COMMIT;
