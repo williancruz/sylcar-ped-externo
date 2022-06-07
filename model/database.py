@@ -27,30 +27,32 @@ class Interface:
         self.conn.execute('PRAGMA locking_mode = EXCLUSIVE')
         self.conn.execute('VACUUM')
 
-    def recuperar(self, **kwargs):
+    def recuperar(self, sql: str, params: tuple = (), tam: int = 0,
+                  unico: bool = False) -> tuple | None:
         """Recupera informações do banco de dados.
 
         Argumentos:
-            sql (str): a string SQL a ser executada\n
+            sql (str): a string DQL a ser executada\n
             unico (bool): Retornar apenas um registro da base. Padrão: False\n
             params (tuple): tupla com argumentos p/ o WHERE (opcional)\n
             tam (int): retorna N registros do banco de dados (opcional)\n
 
         Retornos:
             tuple: retorna os dados da base (vazia se não tiver mais dados)
+            none: em caso de configuração incorreta dos parâmetros
         """
-        # Recupera os dados do banco de dados
-        if ('params' in kwargs):
-            self.cur.execute(kwargs['sql'], kwargs['params'])
+        # RECUPERAR OS DADOS DA BASE DE DADOS
+        if len(params) > 0:
+            self.cur.execute(sql, params)
         else:
-            self.cur.execute(kwargs['sql'])
+            self.cur.execute(sql)
 
-        # Retorna os dados com base no tipo de consulta
-        if ('unico' in kwargs and 'tam' not in kwargs):
+        # RETORNOS DE CONSULTA
+        if unico:  # único registro, ignora os outros parâmetros
             return self.cur.fetchone()
-        elif ('tam' in kwargs and kwargs['tam'] > 1):
-            return self.cur.fetchmany(kwargs['tam'])
-        elif ('unico' not in kwargs and 'tam' not in kwargs):
+        elif (not unico and tam > 1):  # retorna N elementos da base
+            return self.cur.fetchmany(tam)
+        elif not unico:  # retorna tudo e ignora os outros parâmetros
             return self.cur.fetchall()
         else:
             return None
