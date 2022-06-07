@@ -343,9 +343,15 @@ while True:
                 ped_int['ipt_vendedor'].update(value=vend_selecionado[6:])
                 ped_int['ipt_nro_ped_externo'].update(value=pedido_ext[2])
                 ped_int['id_ped_externo'].update(value='')
-                ped_int['cmb_ped_int_status'].update(values=('Faturado',
-                                                             'Cancelado'),
-                                                     value='Faturado')
+
+                if ped_selecionado[2] == 'F':
+                    ped_int['cmb_ped_int_status'].update(values=('Cancelado',),
+                                                         value='Cancelado')
+                elif ped_selecionado[2] == 'A':
+                    ped_int['cmb_ped_int_status'].update(values=('Faturado',
+                                                                 'Cancelado'),
+                                                         value='Faturado')
+
                 ped_int['chb_editando_ped_int'].update(value=True)
                 ped_int['id_ped_externo'].update(value=pedido_ext[0])
         else:
