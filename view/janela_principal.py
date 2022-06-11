@@ -81,7 +81,7 @@ def overview_pedidos():
         [sg.Tab('Usuários', layout=layout_aba_usuarios, k='tab_usuarios')]
     ]
 
-    return sg.Window(title='Organizador de Pedidos Externos :: Ver. 2.1',
+    return sg.Window(title='Organizador de Pedidos Externos :: Ver. 2.2',
                      layout=[
                          [sg.TabGroup(layout=layout, expand_x=True,
                                       expand_y=True)]
