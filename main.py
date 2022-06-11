@@ -248,12 +248,12 @@ while True:
         pedido_externo = PedExterno()
         vendedor = Vendedores()
 
-        nro_pedido = values['ipt_num_ped_ext']
+        nro_pedido = int(values['ipt_num_ped_ext'])
         id_pedido_externo = values['ipt_id_ped_externo']
         observacao = values['mln_obs_pedido']
         data = datetime.today().isoformat()
 
-        cod_vendedor = values['ipt_vend_ped_externo'][0:3]
+        cod_vendedor = int(values['ipt_vend_ped_externo'][0:3])
         serie_vendedor = vendedor.recuperar_serie(cod_vendedor)
 
         if (nro_pedido and str(nro_pedido).isnumeric()):
@@ -265,12 +265,16 @@ while True:
                 sg.PopupQuickMessage('Registro Atualizado')
                 pedidos['ipt_pesquisa_pedido'].update(value='')
             else:
-                pedido_externo.adicionar(int(nro_pedido), serie_vendedor,
-                                         int(cod_vendedor), data, observacao)
-                ped_ext.close()
-                popular_tabela_externos(cod_vendedor)
-                sg.PopupQuickMessage('Registro Inserido')
-                pedidos['ipt_pesquisa_pedido'].update(value='')
+                r = pedido_externo.adicionar(nro_pedido, serie_vendedor,
+                                             cod_vendedor, data, observacao)
+
+                if r:
+                    ped_ext.close()
+                    popular_tabela_externos(cod_vendedor)
+                    sg.PopupQuickMessage('Registro Inserido')
+                    pedidos['ipt_pesquisa_pedido'].update(value='')
+                else:
+                    sg.PopupQuickMessage('Pedido já cadastrado!')
         else:
             sg.PopupQuickMessage('Nro. do PED em branco ou contém letras...')
 
